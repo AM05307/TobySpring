@@ -11,13 +11,20 @@ public class Exception4 {
 		catch(SQLException e) {
 			// ErrorCode가 MySQL의 "Duplicate Entry(1062)"이면 예외 전환 
 			if(e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {
-				throw DuplicateUserIdException().initCause(e); // 예외에 원래 발생한 예외를 담아서 중첩 예외로 만든다. 
-				// 중첩 예외는 getCause() 메소드를 이용해서 처음 발생한 예외가 무엇인지 확인할 수 있다. 
+				// add()메소드를 사용하는 쪽에서 아이디 중복 예외를 처리하고 싶은 경우 활용할 수 있음을 알려주도록 
+				// DuplicateUserIdException을 메소드의 throws 선언에 포함시킨다 
+				throw new DuplicateUserIdException(e); // 예외 전환
 			} else {
-				throw e; // 그 외의 경우는 SQL Exception 그대로 
+				// 언체크 예외
+				throw new RuntimeException(e); // 예외 포장
 			}
 		}
 	
 	}
 	
-}
+	// 사용자 아이디가 중복됐을때 사용 
+	public class DuplicateUserIdException extends RuntimeException {
+		public DuplicateUserIdException(Throwable cause) {
+			super(cause);
+		}
+	}
