@@ -2,6 +2,8 @@ package a01;
 
 @RunWith(SpringJUnit4ClassRunner.class) // 스프링의 테스트 컨텍스트 프레임워크의 JUnit확장기능 지정 
 public class UserDaoTest {
+	@Autowired UserDao dao;
+	@Autowired DataSource dataSource;
 	UserDao dao; // @Autowired가 없다. 
 	
 	@Before
@@ -11,7 +13,18 @@ public class UserDaoTest {
 			"jdbc:mysql//localhost/testdb", "spring", "book", true	
 			);
 		dao.setDataSource(dataSource);
-		// 오브젝트 생성, 관계설정 등을 모두 직접 해준다. 
+		// 오브젝트 생성, 관계설정 등을 모두 직접 해준다.
+		
+	    this.user1 = new User("gyumee", "박성철", "springno1", Lvl.BASIC, 1, 0);
+	    this.user2 = new User("leegw700", "이길원", "springno2", Lvl.SILVER, 55, 10);
+	    this.user3 = new User("bumjin", "박범진", "springno3", Lvl.GOLD, 100, 40);
+	}
+	
+	@Test(expected = DataAccessException.class)
+	public void duplicateKey() {
+		dao.deleteAll();
+		dao.add(user1);
+		dao.add(user1); //강제로 사용자를 두번 등록한다. 여기서 예외 발생 
 	}
 
 }
