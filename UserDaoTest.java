@@ -37,5 +37,13 @@ public class UserDaoTest {
 		assertThat(user1.getLogin(), is(user2.getLogin()));
 		assertThat(user1.getRecommend(), is(user2.getRecommend()));
 	}
+	
+	@Test public void addAndGet() {
+		User userget1 = dao.get(user1.getId());
+		checkSameUser(userget1, user1);
+		
+		User userget2 = dao.get(user2.getId());
+		checkSameUser(userget2, user2);
+	}
 
 }
