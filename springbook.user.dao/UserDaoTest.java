@@ -1,5 +1,6 @@
 package springbook.user.dao;
 
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class) // 스프링의 테스트 컨텍스트 프레임워크의 JUnit확장기능 지정 
@@ -38,12 +39,30 @@ public class UserDaoTest {
 		assertThat(user1.getRecommend(), is(user2.getRecommend()));
 	}
 
-	@Test public void addAndGet() {
+	@Test 
+	public void addAndGet() {
 		User userget1 = dao.get(user1.getId());
 		checkSameUser(userget1, user1);
 		
 		User userget2 = dao.get(user2.getId());
 		checkSameUser(userget2, user2);
+	}
+	
+	@Test
+	public void update(){
+		dao.deleteAll();
+		dao.add(user1);
+		
+		// 픽스처에 들어있는 정보를 변경해서 수정 메소드를 호출한다. 
+		user1.setName("차은우");
+		user1.setPassword("springno6");
+		user1.setLevel(Level.GOLD);
+		user1.setLogin(1000);
+		user1.setRecommend(999);
+		dao.update(user1);
+		
+		User user1update = dao.get(user1.getId());
+		checkSameUser(user1, user1update);
 	}
 	
 }
